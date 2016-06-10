@@ -1,39 +1,13 @@
 ;;********************* Monkey Frank's Emacs ****************************
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(require 'init-packages)
 
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  )
-
-(require 'cl)
-
-;; add whatever packages you want here
-(defvar frank/packages '(
-			 company
-			 monokai-theme
-			 hungry-delete
-			 smex
-			 swiper
-			 counsel
-			 smartparens
-			 ) "Default packages")
-
-(defun frank/packages-installed-p ()
-  (loop for pkg in frank/packages
-	when(not (package-installed-p pkg)) do (return nil)
-	finally (return t)))
-
-(unless (frank/packages-installed-p)
-  (message "%s" "Refreshing packages database...")
-  (package-refresh-contents)
-  (dolist (pkg frank/packages)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
 
 ;;************************** Global Settings ****************************
-(setq visible-bell t)
-;;(setq make-backup-files nil)
+(setq visible-bell nil)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+(setq ring-bell-function 'ignore)
 
 ;; make GUI Emacs always sees the same $PATH
 (defun set-exec-path-from-shell-PATH ()
@@ -50,7 +24,8 @@
 (global-hl-line-mode t)
 (require 'smartparens-config)
 (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
-(smartparens-global-mode t)
+
+(global-auto-revert-mode t)
 ;;************************** Operation Settings **************************
 (setq x-select-enable-clipboard t)
 
@@ -66,16 +41,12 @@
 
 (global-set-key (kbd "<f3>") 'open-init-file)
 (delete-selection-mode t)
- 
-(require 'hungry-delete)
-(global-hungry-delete-mode)
 
 (require 'smex)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
+
 (global-set-key "\C-s" 'swiper)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
 (global-set-key (kbd "<f6>") 'ivy-resume)
@@ -96,12 +67,20 @@
 (global-set-key (kbd "C-h C-f") 'find-function)
 (global-set-key (kbd "C-h C-v") 'find-variable)
 (global-set-key (kbd "C-h C-k") 'find-function-on-key)
+
+
+
+(abbrev-mode t)
+(define-abbrev-table 'global-abbrev-table '(
+					    ("fk" "frank")
+					    ))
+
 ;;************************** Apperance Settings **************************
 
 (setq initial-frame-alist (quote ((fullscreen . maximized))))
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 ;;(load-theme 'colonoscopy t)
-;;(load-theme 'monokai t)
+
 
 (global-set-key (kbd "<f12>") 'loop-alpha)
 (setq alpha-list '((55 35) (100 100) (95 65) (85 55) (75 45)))
@@ -132,7 +111,7 @@
 (require 'window-numbering)
 (window-numbering-mode 1)
 
-(global-company-mode t)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; org-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq org-startup-indented t)
