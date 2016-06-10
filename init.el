@@ -1,37 +1,109 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;; Monkey Frank's Emacs Configuration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;Learning emacs...
+;;********************* Monkey Frank's Emacs ****************************
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;; 系统设置 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 启动时进入debug模式
-(setq debug-on-quit t)
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  )
 
-;; 关闭出错时的蜂鸣提示声
+(require 'cl)
+
+;; add whatever packages you want here
+(defvar frank/packages '(
+			 company
+			 monokai-theme
+			 hungry-delete
+			 smex
+			 swiper
+			 counsel
+			 smartparens
+			 ) "Default packages")
+
+(defun frank/packages-installed-p ()
+  (loop for pkg in frank/packages
+	when(not (package-installed-p pkg)) do (return nil)
+	finally (return t)))
+
+(unless (frank/packages-installed-p)
+  (message "%s" "Refreshing packages database...")
+  (package-refresh-contents)
+  (dolist (pkg frank/packages)
+    (when (not (package-installed-p pkg))
+      (package-install pkg))))
+
+;;************************** Global Settings ****************************
 (setq visible-bell t)
+;;(setq make-backup-files nil)
 
-;; 关闭自动备份文件
-(setq make-backup-files nil)
+;; make GUI Emacs always sees the same $PATH
+(defun set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (replace-regexp-in-string
+                          "[ \t\n]*$"
+                          ""
+                          (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq eshell-path-env path-from-shell) ; for eshell users
+    (setq exec-path (split-string path-from-shell path-separator))))
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;; 操作设置 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 支持emacs和外部程序之间进行粘贴
+(when window-system (set-exec-path-from-shell-PATH))
+(add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+(global-hl-line-mode t)
+(require 'smartparens-config)
+(add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+(smartparens-global-mode t)
+;;************************** Operation Settings **************************
 (setq x-select-enable-clipboard t)
 
-;; undo/redo之前操作的窗口
+;; undo/redo
 (setq winner-dont-bind-my-keys t)
 (winner-mode 1)
 (global-set-key (kbd "<f9> C-u") 'winner-undo)
 (global-set-key (kbd "<f9> C-r") 'winner-redo)
 
+(defun open-init-file ()
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 显示设置 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Color theme [molokai]
-(setq molokai-theme-kit t)
+(global-set-key (kbd "<f3>") 'open-init-file)
+(delete-selection-mode t)
+ 
+(require 'hungry-delete)
+(global-hungry-delete-mode)
+
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "<f6>") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-load-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+
+(global-set-key (kbd "C-h C-f") 'find-function)
+(global-set-key (kbd "C-h C-v") 'find-variable)
+(global-set-key (kbd "C-h C-k") 'find-function-on-key)
+;;************************** Apperance Settings **************************
+
+(setq initial-frame-alist (quote ((fullscreen . maximized))))
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'molokai t)
+;;(load-theme 'colonoscopy t)
+;;(load-theme 'monokai t)
 
-;; 半透明设置，Mac全屏时候无效
-(global-set-key [(f12)] 'loop-alpha)
+(global-set-key (kbd "<f12>") 'loop-alpha)
 (setq alpha-list '((55 35) (100 100) (95 65) (85 55) (75 45)))
 (defun loop-alpha ()
   (interactive)
@@ -44,48 +116,34 @@
     )
   )
 
-;; 光标不闪烁
 (blink-cursor-mode nil)
-
-;; 光标显示为竖线
 (setq-default cursor-type 'bar)
-
-;; 不显示工具栏
 (tool-bar-mode -1)
-
-;; 不显示滚动条
 (scroll-bar-mode -1)
-
-;; 在最上方的标题栏显示当前buffer的名字
 (setq frame-title-format "%b")
+(linum-mode -1)
+(setq inhibit-splash-screen t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;; 插件加载 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;**************************** Plugins ***********************************
 ;; CEDET
 ;(add-to-list 'cedet-path "~/.emacs.d/plugins/cedet-1.1/"
 
-;; 显示行号 (不能在doc-view-mode下使用)
-;(global-linum-mode 1)
-;(require 'linum)
-
-;; 快速窗口切换(M-0~9)
 (add-to-list 'load-path "~/.emacs.d/plugins/")
 (require 'window-numbering)
 (window-numbering-mode 1)
 
-
-
+(global-company-mode t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; org-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 标题缩进
 (setq org-startup-indented t)
-
-;; 隐藏星号
 (setq org-hide-leading-stars t)
 
-;; 设置org模式标题字体大小
-(set-face-attribute 'org-level-1 nil :height 1.6 :bold t)
-(set-face-attribute 'org-level-2 nil :height 1.4 :bold t)
-(set-face-attribute 'org-level-3 nil :height 1.2 :bold t)
+(require 'org)
+(setq org-src-fontify-natively t)
+
+;;(set-face-attribute 'org-level-1 nil :height 1.6 :bold t)
+;;(set-face-attribute 'org-level-2 nil :height 1.4 :bold t)
+;;(set-face-attribute 'org-level-3 nil :height 1.2 :bold t)
 
 ;; agenda-view快捷键设置
 ;; 生成todos目录下所有org文件的全局TODO清单
@@ -98,8 +156,24 @@
                              "~/.emacs.d/org/todos/me.org"
 			     "~/.emacs.d/org/notes/org-mode.org"
                            ))
+;; TODO标签
+;; NEW --- 第一次出现在脑海中
+;; PLANNING --- 方案思考中
+;; OPEN --- 开始着手
+;; BLOCKING --- 阻塞(记录原因)
+;; DONE --- 完成
+;; CANCEL --- 取消
 
+(setq org-todo-keywords
+      '((sequence "NEW(n!)" "PLANNING(p@/!)" "OPEN(o!)" "BLOCKING(b@/!)" "|" "DONE(d@/!)" "CANCELED(c@/!)")
+     )) 
 
+(defun org-summary-todo (n-done n-not-done)
+      "Switch entry to DONE when all subentries are done, to TODO otherwise."
+      (let (org-log-done org-log-states)   ; turn off logging
+        (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+    
+    (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; doc-view-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -108,6 +182,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-idle-delay 0.2)
+ '(company-minimum-prefix-length 2)
  '(custom-safe-themes
    (quote
     ("c3c0a3702e1d6c0373a0f6a557788dfd49ec9e66e753fb24493579859c8e95ab" default)))
@@ -125,14 +201,28 @@
  ;; If there is more than one, they won't work right.
  )
 
-;; ghostscript路径设置
+;; ghostscript path
 (setq doc-view-ghostscript-program "/usr/local/Cellar/ghostscript/9.16/bin/gs")
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;; wakatime-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-wakatime-mode)
+;;(add-to-list 'load-path "~/.emacs.d/plugins/")
+;(require 'wakatime-mode)
+(setq wakatime-api-key "bf921285-9122-4e86-ba9a-1632707e0c7e")
+(setq wakatime-cli-path "/Users/Frank/Library/Enthought/Canopy_64bit/User/bin/wakatime")
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;; C Language ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'c-mode-hook
+          '(lambda ()
+             (c-set-style "K&R")
+             (setq tab-width 4)
+             (setq indent-tabs-mode t)
+             (setq c-basic-offset 4)))
 
-
+(load-file "~/.emacs.d/plugins/cedet-1.1/common/cedet.el")
+(global-ede-mode 1)
 
 
 
