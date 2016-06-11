@@ -16,6 +16,7 @@
 			 counsel
 			 smartparens
 			 popwin
+			 reveal-in-osx-finder
 			 ) "Default packages")
 
 (defun frank/packages-installed-p ()
@@ -30,6 +31,8 @@
     (when (not (package-installed-p pkg))
       (package-install pkg))))
 
+(require 'window-numbering)
+(window-numbering-mode 1)
 
 (smartparens-global-mode t)
 (require 'hungry-delete)

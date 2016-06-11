@@ -1,13 +1,14 @@
 ;;********************* Monkey Frank's Emacs ****************************
 (add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.emacs.d/plugins/")
 (require 'init-packages)
-
+(require 'init-ui)
+(require 'init-better-defaults)
+(require 'init-key-binding)
 
 ;;************************** Global Settings ****************************
-(setq visible-bell nil)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-(setq ring-bell-function 'ignore)
+
+(setq custom-file (expand-file-name "lisp/custom.el" user-emacs-directory))
 
 ;; make GUI Emacs always sees the same $PATH
 (defun set-exec-path-from-shell-PATH ()
@@ -21,7 +22,7 @@
 
 (when window-system (set-exec-path-from-shell-PATH))
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
-(global-hl-line-mode t)
+
 (require 'smartparens-config)
 (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
 
@@ -32,86 +33,20 @@
 ;; undo/redo
 (setq winner-dont-bind-my-keys t)
 (winner-mode 1)
-(global-set-key (kbd "<f9> C-u") 'winner-undo)
-(global-set-key (kbd "<f9> C-r") 'winner-redo)
 
-(defun open-init-file ()
-  (interactive)
-  (find-file "~/.emacs.d/init.el"))
 
-(global-set-key (kbd "<f3>") 'open-init-file)
 (delete-selection-mode t)
 
 (require 'smex)
 (smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-
-
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-load-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-
-(global-set-key (kbd "C-h C-f") 'find-function)
-(global-set-key (kbd "C-h C-v") 'find-variable)
-(global-set-key (kbd "C-h C-k") 'find-function-on-key)
 
 
 
-(abbrev-mode t)
-(define-abbrev-table 'global-abbrev-table '(
-					    ("fk" "frank")
-					    ))
 
-;;************************** Apperance Settings **************************
-
-(setq initial-frame-alist (quote ((fullscreen . maximized))))
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-;;(load-theme 'colonoscopy t)
-
-
-(global-set-key (kbd "<f12>") 'loop-alpha)
-(setq alpha-list '((55 35) (100 100) (95 65) (85 55) (75 45)))
-(defun loop-alpha ()
-  (interactive)
-  (let ((h (car alpha-list)))                ;; head value will set to
-    ((lambda (a ab)
-       (set-frame-parameter (selected-frame) 'alpha (list a ab))
-       (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
-       ) (car h) (car (cdr h)))
-    (setq alpha-list (cdr (append alpha-list (list h))))
-    )
-  )
-
-(blink-cursor-mode nil)
-(setq-default cursor-type 'bar)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(setq frame-title-format "%b")
-(linum-mode -1)
-(setq inhibit-splash-screen t)
 
 ;;**************************** Plugins ***********************************
 ;; CEDET
 ;(add-to-list 'cedet-path "~/.emacs.d/plugins/cedet-1.1/"
-
-(add-to-list 'load-path "~/.emacs.d/plugins/")
-(require 'window-numbering)
-(window-numbering-mode 1)
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; org-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq org-startup-indented t)

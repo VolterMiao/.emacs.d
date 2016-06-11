@@ -1,0 +1,21 @@
+(tool-bar-mode -1)
+(setq inhibit-splash-screen t)
+(blink-cursor-mode nil)
+(setq-default cursor-type 'bar)
+(setq initial-frame-alist (quote ((fullscreen . maximized))))
+(global-hl-line-mode t)
+
+(global-set-key (kbd "<f12>") 'loop-alpha)
+(setq alpha-list '((55 35) (100 100) (95 65) (85 55) (75 45)))
+(defun loop-alpha ()
+  (interactive)
+  (let ((h (car alpha-list)))                ;; head value will set to
+    ((lambda (a ab)
+       (set-frame-parameter (selected-frame) 'alpha (list a ab))
+       (add-to-list 'default-frame-alist (cons 'alpha (list a ab)))
+       ) (car h) (car (cdr h)))
+    (setq alpha-list (cdr (append alpha-list (list h))))
+    )
+  )
+
+(provide 'init-ui)
