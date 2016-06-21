@@ -17,6 +17,7 @@
 			 smartparens
 			 popwin
 			 reveal-in-osx-finder
+			 markdown-mode
 			 ) "Default packages")
 
 (defun frank/packages-installed-p ()
@@ -42,7 +43,7 @@
 (setq ivy-use-virtual-buffers t)
 (global-company-mode t)
 
-;;(load-theme 'monokai t)
+(load-theme 'monokai t)
 
 (require 'popwin)
 (popwin-mode t)

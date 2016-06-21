@@ -6,6 +6,12 @@
 (require 'init-better-defaults)
 (require 'init-key-binding)
 
+;;************************** Dropbox ************************************
+(setq org-directory "~/.emacs.d/org")
+(setq org-mobile-inbox-for-pull "~/.emacs.d/org/notes/org-mode.org")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+
+
 ;;************************** Global Settings ****************************
 
 (setq custom-file (expand-file-name "lisp/custom.el" user-emacs-directory))
