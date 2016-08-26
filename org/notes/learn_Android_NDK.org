@@ -1,0 +1,132 @@
+* NDK学习资料
+** Android Developer Site
+** Android SDK Sample
+** Android Source Code
+** Blog
+*** http://web.guohuiwang.com/technical-notes/androidndk1
+*** http://web.guohuiwang.com/technical-notes/androidndk2
+** 《android高级开发实战------UI、NDK与安全》
+** 《细说Android 4.0 NDK编程》
+** 《Android NDK Beginner's Guide》
+https://book.douban.com/subject/6868985/
+** 《Pro Android C++ with the NDK》（可直接下载）
+http://it-ebooks.info/book/1580/
+* Android Developer
+** 什么是Android NDK
+Native Development Kit，是一个工具集，使得开发者可以使用C\C++编写
+Android应用程序。
+** 什么时候采用NDK
+NDK并不适合Android初学者，也很少有APP值得使用NDK。它给开发带来了不
+可避免的复杂性。只有在以下情况适合使用NDK：
+
+1. 计算密集型应用（如游戏，物理仿真）需要截取设备额外性能时；
+2. 需要复用他人的C\C++库时；
+** 学习NDK的步骤
+1. 掌握基本概念
+2. 编写Demo
+3. 处理不同硬件平台问题
+4. 了解如何使用NDK构建和Debug应用
+5. 了解如何使用共享库
+** NDK是如何工作的
+*** 主要概念
+**** ndk-build
+该脚本启动NDK内部的构建脚本，实现：
+1. 自动探测系统和app工程文件，决定编译哪些内容；
+2. 编译生成二进制文件；
+3. 拷贝二进制到app工程目录；
+**** Java
+Android构建进程将Java源码生成.dex文件，运行于DVM。即使应用不包
+含Java代码，仍然会生成.dex文件。
+
+编写Java代码时，使用native关键字表示一个方法是native语言实现的：
+public native int add(int x, int y);
+**** Native Shared Libraries
+你的native代码通过NDK构建生成的库（.so）
+
+注意：如果两个库中分别实现了签名相同的方法，会产生链接错误。C语言
+的函数签名即是函数的名字，而C++是名字、参数名称、参数类型决定。
+**** Native Static Libraryies
+NDK同样也可以构建静态库（.a）
+**** Java Native Interface(JNI)
+这是Java和C\C++之间的接口语言
+**** Application Binary Interface(ABI)
+ABI定义了你的APP的机器码如何在运行时与系统交互。不同的ABI对应
+不同的处理器架构，NDK支持ARMEABI(默认)、MIPS、x86。NDK根据
+不同ABI编译生成不同的.so。
+**** Manifest
+如果你编写的APP没有Java代码，需要生命NativeActivity
+**** make文件
+***** Android.mk
+必须编写一个Android.mk文件放在jni文件夹内。ndk-build脚本会
+去找这个文件。它定义了模块的名称、参加编译的代码文件、编译选
+项以及要链接的共享库。
+***** Application.mk
+这个文件列举和描述了你的APP需要的modules，包括：
+1. 对特定平台编译时的ABI选项；
+2. 工具链；
+3. 包含的标准库(static 和 STLport 或系统默认)；
+*** 工作流
+**** 1 设计
+确定哪些用Java实现，哪些用native语言实现。
+**** 2 创建一个APP项目
+**** 3 如果是纯Native的APP
+在AndroidManifest.xml中声明NativeActivity
+**** 4 创建Android.mk文件
+内容包括：模块名称、编译选项、链接的库、源代码文件
+**** 5 (optinal) 创建Application.mk文件
+内容包括：配置目标ABI、工具链、release\debug模式、STL
+如果没有该文件，默认值参考如下：
+ABI: armeabi
+Toolchain: GCC 4.8
+Mode: Release
+STL: system
+**** 6 把native代码文件放到工程的jni文件夹内
+**** 7 用ndk-build编译生成.so\.a库文件
+**** 8 构建Java部分，生成可执行的.dex文件
+**** 9 打包生成APK
+*** Native Activities and Applications
+*** Android.mk文件
+**** 概览
+**** 基础
+***** LOCAL_PATH := (call my-dir)
+Android.mk文件必须以此开头，定义了代码所在的位置。
+my-dir变量是由构建系统提供的，它指代Android.mk文件所在的位置
+
+***** include $(CLEAR_VARS)
+CLEAR_VARS变量指向一个特殊的GNU Makefile文件，它会清除许多
+以LOCAL_XXX命名的变量，例如LOCAL_MODULE、LOCAL_SRC_FILES、
+LOCAL_STATIC_LIBRARIES。但是它不会清除LOCAL_PATH。
+
+注意：
+系统在一个GNU Make进程上下文中解析所有构建控制文件，所有变量都
+是Global的。
+
+***** LOCAL_MODULE := hello-jni
+模块名称，必须是唯一的，且不能包含空格。编译生成的库文件名字将被
+自动命名为lib<LOCAL_MODULE>.so
+
+注意:
+如果你起的模块名称是以lib开头的，那么编译结果将不会再加一个lib作
+为前缀。
+
+***** LOCAL_SRC_FILES := hello-jni.c
+列举所有参加编译的源代码文件，多个文件用空格隔开，用\换行
+
+***** include $(BUILD_SHARED_LIBRARY)
+BUILD_SHARED_LIBRARY变量指向一个GNU Makefile脚本，这个脚本收
+集自上一个include以来你定义的所有LOCAL_XXX变量。它决定如何编译。
+
+**** 变量和宏
+
+***** NDK系统保留变量名
+1. 以LOCAL_开头的名字
+2. 以PRIVATE_、NDK_、APP开头的名字
+3. 小写字母变量名，如my-dir
+
+如果要定义自己的变量名，推荐以MY_开头
+
+***** NDK定义的变量
+
+**** Module-Description 变量
+
+*** Gradle的NDK配置

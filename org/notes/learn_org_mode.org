@@ -1,0 +1,27 @@
+* Learn org-mode
+** 添加任务
+** 定义任务状态 C-c C-t
+*** 自定义状态
+#+SEQ_TODO: REPORT(r) BUG(b) KNOWNCAUSE(k) | FIXED(f)
+#+SEQ_TODO: TODO(T!) | DONE(D@)3  CANCELED(C@/!)
+*** 状态切换 S-Left/Right
+** 设置任务优先级 S-Up/Down
+** DONE 跟踪子任务完成情况 [50%]
+*** NEW submission 1 
+- State "NEW"        from ""           [2016-06-18 Sat 10:31]
+*** DONE submission 2
+** 用复选框标记非标题类型的子任务
+*** 一个任务 [0/2]
+该任务包含几个步骤：
+- [-] 步骤1 [1/2]
+  - [X] 步骤1.1
+  - [ ] 步骤1.2
+- [-] 步骤2 [1/2]
+  - [X] 步骤2.1
+  - [ ] 步骤2.2
+** 查询任务 C-c /
+** 时间表
+*** 时间戳
+*** 起始时间/截止时间
+** Agenda
+** 

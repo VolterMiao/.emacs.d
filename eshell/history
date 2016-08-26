@@ -1,0 +1,128 @@
+cd Documents/Notes/
+l
+ls
+mkdir markdown
+cd markdown/
+touch learn_markdown.md
+ls
+cd
+ls
+cd Documents/Projects/open_source/
+ls
+git clone git@github.com:git/git.git
+cd
+cd Documents/Projects/
+cd git-0.99/
+gtags
+ls
+ls G
+ls GTAGS 
+cd
+cd Documents/Projects/blog/
+ls
+cd ..
+ls
+cd ..
+ls
+cd blog/
+ls
+cd voltermiao.github.io/
+ls
+jekyll serve
+cd ..
+ls
+jekyll serve
+ls
+gem install jekyll
+cd ../../..
+cd ..
+go install github.com/volter.miao/hello
+source ~/.profile 
+go install github.com/volter.miao/hello
+l
+ls
+cd ..
+ls
+cd ../../..
+ls
+cd bin/
+ls
+hello
+./hello 
+cd ..
+ls
+rm -rf .
+rm -rf
+ls
+rm -rf *
+ls
+mkdir src
+cd src/
+mkdir jvmgo
+cd jvmgo/
+mkdir ch01
+cd ..
+go install jvmgo/ch01/
+cd ../../..
+cd bin/
+./ch02
+cd /Library/Java/JavaVirtualMachines/
+ls
+cd jdk1.8.0_20.jdk/Contents/MacOS/
+ls
+cd ..
+cd Home/jre/
+ls
+pwd
+cd ~/Documents/Projects/go_work_space/
+cd bin/
+./ch02 -Xjre "/Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/jre" java.lang.Object
+cd Home/jre/
+cd /Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/jre
+ls
+cd lib
+cd ~/Documents/Projects/go_work_space/
+ls
+cd src/jvmgo/ch02/
+ls
+cd ../../..
+cd bin/
+./ch02 -Xjre /Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/jre java.lang.Object
+cd ..
+go install src/jvmgo/ch02/
+cd ..
+ls
+cd go_work_space/src/
+ls
+go install jvmgo/ch02/
+cd ..
+cd bin/
+./ch02 -Xjre /Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/jre java.lang.Object
+./ch02 -Xjre /Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/jre java.lang.Object
+./ch02 -Xjre "/Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home/jre" java.lang.Object
+./ch02 -Xjre java.lang.Object
+./ch02 -Xjre java.lang.Object
+./ch02 -Xjre java.lang.Object
+./ch02 -Xjre "" java.lang.Object
+cd ..
+ls
+rm -r org/todos/
+ls
+cd org/
+ls
+ls
+cd .emacs.d/
+ls
+cd .cask/
+ls
+cd 24.5
+ls
+cd elpa/
+ls
+cd smartparens-20160821.152/
+ls
+ls
+cd .cask/24.5/elpa/
+ls
+cd abc-mode-20140225.944/
+ls

@@ -1,0 +1,151 @@
+#+STARTUP: indent
+#+STARTUP:hidestars
+
+* 官网介绍
+1. 什么是org-mode
+官方网站：orgmode.org
+一句话简介：org-mode是快速高效地记笔记、制作TODO List、做项目计划、写文档的文本系统。
+
+2. org-mode有哪些作用？
+   + 多级标题展示，折叠
+   + 制作TODO List
+       - 分解任务和子任务
+       - 设置时间
+       - 标记任务状态
+   + 时间管理
+       - 记录任务花费时长
+       - 以表格形式生成报告
+   + 日程管理
+       - 内建了日程视图
+   + 表格功能
+       - 可以导入.csv
+   + 导出成多种轻量级标记语言
+       - Markdown
+       - Latex
+   + 还能支持源代码高亮显示。。
+
+3. org-mode入门级用法
+
+4. org-mode进阶用法
+5. org-mode神级用法
+
+* 遗留问题
+** 操作
+*** DONE buffer 切换
+- State "DONE"       from "NEW"        [2015-11-11 Wed 20:11]
+    - State "NEW"        from ""           [2015-11-11 Wed 19:20]
+C-x <- and C-x ->
+*** DONE ctrl键按起来不爽，寻找最舒服的改建
+- State "DONE"       from "NEW"        [2015-11-25 Wed 00:31]
+    - State "NEW"        from ""           [2015-11-11 Wed 19:18]
+利用mac的改建，把ctrl映射到caps，并交换alt和command，让M变得拇指可及
+*** DONE 删除整行\整句
+- State "DONE"       from "NEW"        [2015-11-11 Wed 20:16]
+- State "NEW"        from ""           [2015-11-11 Wed 20:12]
+C-k 删除从光标开始到行尾
+M-k 删除整句 (无效，需要设置)
+C-d = Delete
+this is a test. And I love you. Haha.
+*** NEW 重启
+- State "NEW"        from ""           [2015-11-11 Wed 23:21]
+** 界面
+*** TODO 调整窗口宽高
+- State "TODO"       from "NEW"        [2015-11-11 Wed 20:10]
+    - State "NEW"        from ""           [2015-11-11 Wed 19:19]
+http://stackoverflow.com/questions/4987760/how-to-change-size-of-split-screen-emacs-windows
+*** DONE 去掉滚动条
+- State "DONE"       from "NEW"        [2015-11-11 Wed 20:03]
+- State "NEW"        from ""           [2015-11-11 Wed 19:41]
+*** DONE 放大/还原窗口
+- State "DONE"       from "NEW"        [2015-11-11 Wed 20:00]
+- State "NEW"        from ""           [2015-11-11 Wed 20:00]
+*** NEW 启动时最大化
+- State "NEW"        from ""           [2015-11-12 Thu 22:21]
+** 模式相关
+*** org-mode
+**** DONE 缩进和星号设定不生效
+- State "DONE"       from "TODO"       [2015-11-15 Sun 16:54]
+     - State "TODO"       from ""           [2015-11-11 Wed 19:18]
+(setq org-startup-indented t)
+(setq org-hide-leading-stars t)
+**** TODO org-level-1报错 重新eval-buffer一下就生效
+- State "TODO"       from "NEW"        [2015-11-15 Sun 17:22]
+     - State "NEW"        from ""           [2015-11-11 Wed 19:21]
+设置org-mode-hook?
+参考http://www.cnblogs.com/bamanzi/p/org-mode-tips.html
+**** NEW 插入图片
+- State "NEW"        from ""           [2015-11-14 Sat 23:32]
+iimage-mode，想要在org-mode中插入图片，还需要特殊配置
+**** NEW 标题间跳转操作
+- State "NEW"        from ""           [2015-11-14 Sat 23:36]
+**** DONE 全局TODO List
+- State "DONE"       from "NEW"        [2015-11-25 Wed 20:23]
+- State "NEW"        from ""           [2015-11-25 Wed 19:36]
+*** Markdown
+*** TODO doc-view-mode [50%]
+- State "TODO"       from "DONE"       [2015-11-14 Sat 01:11]
+- State "DONE"       from "ENDING"     [2015-11-11 Wed 23:16]
+    - State "BLOCK"      from ""           [2015-11-11 Wed 19:18] \\
+      打开pdf时png能转换，但是emacs卡死
+**** DONE 配置方法
+- State "DONE"       from "NEW"        [2015-11-14 Sat 01:14]
+- State "NEW"        from ""           [2015-11-14 Sat 01:11]
+1. 安装brew
+2. sudo brew install ghostscript xpdf
+3. M-x customize-group RET doc-view 配置gs程序路径、分辨率
+4. 注意！linum插件要关闭，否则emacs卡死！
+**** DONE PDF文件缩放
+- State "DONE"       from "NEW"        [2015-11-13 Fri 22:51]
+- State "NEW"        from ""           [2015-11-11 Wed 23:27]
+加减按键即可，不用shift的哦~
+**** DONE PDF文件随意跳转到某一页
+- State "DONE"       from "NEW"        [2015-11-13 Fri 22:59]
+- State "NEW"        from ""           [2015-11-13 Fri 22:50]
+M-g g
+**** NEW PDF文件制作录目 [%]
+- State "NEW"        from ""           [2015-11-13 Fri 22:52]
+***** 同目录下记录书签文件
+***** doc-view模式下设置快捷键记录书签数据
+***** 书签数据自动排序
+***** doc-view模式下设置快捷键打开书签数据
+***** 输入页码跳转（难点）
+**** NEW PDF文件编辑
+- State "NEW"        from ""           [2015-11-11 Wed 23:28]
+**** NEW 当pdf被覆盖再恢复时，会跳到第一页
+- State "NEW"        from ""           [2015-11-14 Sat 01:13]
+*** c-mode
+**** NEW c语言缩进
+- State "NEW"        from ""           [2015-11-26 Thu 22:26]
+**** NEW c语言括号
+- State "NEW"        from ""           [2015-11-26 Thu 22:26]
+**** 
+** 插件
+
+** 其他
+*** DONE 进入debug模式
+- State "DONE"       from "NEW"        [2015-11-11 Wed 23:23]
+- State "NEW"        from ""           [2015-11-11 Wed 20:25]
+见配置项。
+如果要在terminal里启动X emacs，使用命令open -a /Application/Emacs --args --debug-init
+*** NEW Emacs中运行lisp程序（交互式+文件执行）
+- State "NEW"        from ""           [2015-11-13 Fri 22:54]
+*** 学习elisp
+**** 学习ANSI Common Lisp [50%]
+***** DONE 第二章 总体介绍
+- State "DONE"       from "NEW"    [2015-11-13 Fri 22:55]
+- State "NEW"        from ""           [2015-11-13 Fri 22:52]
+***** NEW 第三章 列表
+- State "NEW"        from ""           [2015-11-13 Fri 22:52]
+
+*** DONE 修改.emacs和.emacs.d加载位置
+- State "DONE"       from "NEW"        [2015-11-25 Wed 21:16]
+- State "NEW"        from ""           [2015-11-25 Wed 20:25]
+mac下默认加载.emacs 或 .emacs.d/init.el，后者放在文件夹里，比较方便
+* Emacs视频学到的org-mode技巧
+** checkbox                                                            :work:
+- [ ] A
+- [ ] B
+- [ ] C
+** 
+
+

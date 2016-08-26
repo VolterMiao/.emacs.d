@@ -1,10 +1,23 @@
 ;;********************* Monkey Frank's Emacs ****************************
+
+(require 'cask "~/.cask/cask.el")
+(cask-initialize)
+
+(require 'pallet)
+(pallet-mode t)
+
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/plugins/")
 (require 'init-packages)
 (require 'init-ui)
 (require 'init-better-defaults)
 (require 'init-key-binding)
+(require 'init-org)
+
+(require 'smartparens-config)
+(add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+(smartparens-global-mode t)
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
 
 ;;************************** Dropbox ************************************
 (setq org-directory "~/.emacs.d/org")
@@ -27,10 +40,18 @@
     (setq exec-path (split-string path-from-shell path-separator))))
 
 (when window-system (set-exec-path-from-shell-PATH))
+
+; define-advice?????
+;(define-advice show-paren-function (:around (fn) fix-show-paren-function)
+;  "Highlight enclosing parens."
+;  (cond ((looking-at-p "\\s(") (funcall fn))
+;	(t (save-excursion
+;	     (ignore-errors (backward-up-list))
+;	     (funcall fn)))))
+
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
 
-(require 'smartparens-config)
-(add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+
 
 (global-auto-revert-mode t)
 ;;************************** Operation Settings **************************
@@ -53,48 +74,6 @@
 ;;**************************** Plugins ***********************************
 ;; CEDET
 ;(add-to-list 'cedet-path "~/.emacs.d/plugins/cedet-1.1/"
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;; org-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq org-startup-indented t)
-(setq org-hide-leading-stars t)
-
-(require 'org)
-(setq org-src-fontify-natively t)
-
-;;(set-face-attribute 'org-level-1 nil :height 1.6 :bold t)
-;;(set-face-attribute 'org-level-2 nil :height 1.4 :bold t)
-;;(set-face-attribute 'org-level-3 nil :height 1.2 :bold t)
-
-;; agenda-view快捷键设置
-;; 生成todos目录下所有org文件的全局TODO清单
-(global-set-key "\C-ca" 'org-agenda)
-
-;; 加入agenda的org文件清单
-(setq org-agenda-files (list "~/.emacs.d/org/todos/work.org"
-                             "~/.emacs.d/org/todos/projects.org"
-			     "~/.emacs.d/org/todos/study.org"
-                             "~/.emacs.d/org/todos/me.org"
-			     "~/.emacs.d/org/notes/org-mode.org"
-                           ))
-;; TODO标签
-;; NEW --- 第一次出现在脑海中
-;; PLANNING --- 方案思考中
-;; OPEN --- 开始着手
-;; BLOCKING --- 阻塞(记录原因)
-;; DONE --- 完成
-;; CANCEL --- 取消
-
-(setq org-todo-keywords
-      '((sequence "NEW(n!)" "PLANNING(p@/!)" "OPEN(o!)" "BLOCKING(b@/!)" "|" "DONE(d@/!)" "CANCELED(c@/!)")
-     )) 
-
-(defun org-summary-todo (n-done n-not-done)
-      "Switch entry to DONE when all subentries are done, to TODO otherwise."
-      (let (org-log-done org-log-states)   ; turn off logging
-        (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-    
-    (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; doc-view-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
@@ -141,7 +120,7 @@
              (setq indent-tabs-mode t)
              (setq c-basic-offset 4)))
 
-(load-file "~/.emacs.d/plugins/cedet-1.1/common/cedet.el")
+;(load-file "~/.emacs.d/plugins/cedet-1.1/common/cedet.el")
 (global-ede-mode 1)
 
 

@@ -1,0 +1,54 @@
+* Day 6
+** Batch rename files
+1. press ‘C-x C-q’ in dired mode
+2. use expand-region and iedit to batch change files ('C-=')
+3. use 'M-x reveal-in-osx-finder' to show folder in finder
+** Search and Replace
+*** install helm-ag
+1. install ag
+search speed: ag > pt > ack > grep
+
+#+BEGIN_SRC 
+brew install the_silver_searcher
+apt-get install silversearcher-ag
+#+END_SRC
+*** batch replace search result
+1. M-x helm-do-ag-project-root
+2. type in 'pattern'
+3. C-c C-e to edit search result
+4. C-= batch select
+5. M-x e to do modify
+** Snippets and Auto Snippets
+*** Snippets
+1. install yasnippet
+2. look at your menu, haha
+*** Auto Snippet
+1. install auto-yasnippet
+2. add ~ in your code template
+3. M-x aya-create to create code template, and the ~ will disappear
+4. M-x aya-expand to generate a code template
+* Day 7
+** Tweak C-w to delete backward
+Bind C-w to backward-kill-word
+* Day 8
+** melpa emacs china mirror
+** which-key
+** mew-log-commansds
+1. M-x open-log-command-buffers
+2. M-x log-keystroke-command
+
+有Bug
+1. M-1 M-2的时候统计不准确
+2. 每次输入的字符都会记录
+3. 中文记录为数字
+** cask
+管理多个版本的emacs配置
+1. brew install cask
+2. add PATH
+3. M-x package install pallet
+4. M-x pallet
+5. M-x pallet-init
+6. M-x pallet-install
+7. remove melpa folder
+8. add require sentences in init.el
+9. restart emacs

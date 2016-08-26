@@ -6,7 +6,7 @@
 (global-hl-line-mode t)
 
 (global-set-key (kbd "<f12>") 'loop-alpha)
-(setq alpha-list '((55 35) (100 100) (95 65) (85 55) (75 45)))
+(setq alpha-list '((55 35) (100 100) (95 65) (85 55) (65 45)))
 (defun loop-alpha ()
   (interactive)
   (let ((h (car alpha-list)))                ;; head value will set to

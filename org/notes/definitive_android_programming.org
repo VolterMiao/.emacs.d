@@ -1,0 +1,100 @@
+* Chapter 5
+** 启动Activity
+*** 显式、隐式
+*** 带返回结果
+*** 传递数据
+** Extention
+*** ActivityManager
+*** Activity栈和4种启动方式
+*** requestCode、responseCode的常用模式
+
+* Chapter 6 Android SDK版本与兼容
+
+* Chapter 7 Fragment
+** Fragment的引入原因
+*** 绕开Activity在界面灵活性上的限制
+** java.util.UUID类
+** fragment的生命周期
+fragment的生命周期方法由托管activity调用的，生命周期方法有些与
+activity的生命周期方法对应，也有一些用于在特定时期执行
+onAttach()
+onCreate()
+onCreateView()
+onActivityCreated() -- Activity的onCreated方法执行后，由FragmentManager执行被托管的fragment的生命周期方法到这里，后面都与Activity的生命周期方法保持同步
+onStart()
+onResume()
+** 托管的两种方式
+*** 添加fragment到acitivty布局中
+不灵活，但某些特定场景需要这种方式
+*** 在activity代码中添加fragment
+可以在运行时控制fragment
+** FragmentManager类具体管理两方面
+*** fragment队列
+*** fragment事务的回退栈
+** Acitivity和Fragment的选择
+Always use Fragment
+不要等到后面想引入fragment的时候，会很麻烦
+** Adapter的原理和加载列表数据时的一系列调用流程
+** fragment和activity间传递参数的实践写法
+* Chapter 14 fragment 保留
+** setRetainInstance和saveInstanceState的区别是什么？它们分别适用在哪些场景下？
+* Chapter 15 Locale
+** Android如何决定使用哪种屏幕显示密度的资源？
+* Chapter 16 Menu
+** 改成具有Toolbar的模式
+** Toolbar覆盖了列表第一行
+CoordinateLayout是增强型的FrameLayout，改成垂直的LinearLayout就不会覆盖了
+但是为什么Toolbar和Fragment同时使用会出现这个问题？而和Activity使用时不会出现？
+** ViewPager页面无法显示Toolbar
+这个问题比较复杂，参考一篇blog
+http://wuxiaolong.me/2015/12/21/fragmentToolbar/
+* Chapter 18 ContextMenu
+** 微信的上下文菜单是覆盖在列表上的，还有的上下文菜单是出现在操作栏的
+* Chapter 19 Camera
+** 现在应该使用Camera API 2.0，书上使用的API已经废弃
+** Google Camera API指南
+*** Considerations
+**** 相机需求：你的应用是否必须使用相机？如果必须，需要在Manifest中声明
+***** 使用相机<uses-permission android:name="android.permission.CAMERA" />
+***** 具有相机特性<uses-feature android:name="android.hardware.camera" />
+***** 只是需要相机特性并不使用<uses-feature android:name="android.hardware.camera" android:required="false" />
+**** 你的应用只是借用相机拍照片还是具备拍照功能？
+***** 只用来拍快照和视频片段 -> 使用已有的相机应用
+***** 自定义相机功能->自己编写相机应用
+**** 数据存储
+***** 照片只有自身应用使用
+***** 需要共享给其他应用
+***** 应用卸载后继续存留照片
+*** 基础
+android fwk支持通过android.hardware.camera2 API来使用相机功能。以下是相关类：
+**** android.hardware.camera2
+控制相机设备的主要API，在你创建相机应用时用来拍照片和视频片段
+**** Camera
+已废弃的API
+**** SurfaceView
+用来给用户提供实时预览
+**** MediaRecorder
+用来拍视频
+**** Intent
+ MediaStore.ACTION_IMAGE_CAPTURE和 MediaStore.ACTION_VIDEO_CAPTURE两个Action用来在不直接
+使用Camera类的时候拍摄
+*** 使用现存的相机应用
+即如何使用Intent和处理onActivityResult
+*** 创建相机应用
+官方文档没有详细说明如何使用camera2 API，可以参考Github上Google提供的Sample
+https://github.com/googlesamples/android-Camera2Basic
+** TextureView和SurfaceView
+*** 区别
+如果你想显示一段在线视频或者任意的数据流比如视频或者OpenGL 场景，你可以用android中的TextureView做到。
+
+TextureView的兄弟SurfaceView
+
+应用程序的视频或者opengl内容往往是显示在一个特别的UI控件中：SurfaceView。SurfaceView的工作方式是创建一个置于应用窗口之后的新窗口。这种方式的效率非常高，因为SurfaceView窗口刷新的时候不需要重绘应用程序的窗口（android普通窗口的视图绘制机制是一层一层的，任何一个子元素或者是局部的刷新都会导致整个视图结构全部重绘一次，因此效率非常低下，不过满足普通应用界面的需求还是绰绰有余），但是SurfaceView也有一些非常不便的限制。
+
+因为SurfaceView的内容不在应用窗口上，所以不能使用变换（平移、缩放、旋转等）。也难以放在ListView或者ScrollView中，不能使用UI控件的一些特性比如View.setAlpha()。
+
+为了解决这个问题 Android 4.0中引入了TextureView。
+
+与SurfaceView相比，TextureView并没有创建一个单独的Surface用来绘制，这使得它可以像一般的View一样执行一些变换操作，设置透明度等。另外，Textureview必须在硬件加速开启的窗口中。
+** Java Semaphore
+** 

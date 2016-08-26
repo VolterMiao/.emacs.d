@@ -1,0 +1,2 @@
+* 执行jekyll serve命令提示command not found
+** 如何确定是否安装了jekyll

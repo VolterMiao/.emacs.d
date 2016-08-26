@@ -1,0 +1,182 @@
+* Chapter 1 列表处理
+** 1.5 Lisp解释器
+*** Lisp解释器还可以运行字节编译的代码，这种代码以.elc结尾，通过byte-compile-file命令可以将lisp代码编译成字节码
+** 1.6 求值
+*** 返回表达式的求值结果
+*** 同时side effect有移动光标、拷贝文件等
+*** 如果列表嵌套，总是先对内部列表求值，返回值用于计算外部列表
+*** C-x C-e命令的全称是：eval-last-sexp，即对离光标之前最近的一个符号表达式求值
+** 1.7 变量
+*** 变量和函数名都称为符号，只能对变量求值，因为变量有值
+** 1.8 参量
+* Chapter 2 求值实践
+** 2.1 缓冲区名
+(buffer-name)
+(buffer-file-name) 显示完整路径名
+** 2.2 获得缓冲区
+使用current-buffer函数获得当前缓冲区
+(current-buffer) 执行时返回了#<buffer xxx.org>
+other-buffer可以获得最近使用过的缓冲区
+(other-buffer)
+** 2.3 切换缓冲区
+switch-to-buffer函数切换缓冲区
+(switch-to-buffer (other-buffer)) 可以切换到最近使用过的*scratch*
+set-buffer函数作用类似，但是不显示切换后的缓冲区，仅仅是emacs的焦点改变，并不给用户呈现
+** 2.4 缓冲区大小和位点的定位
+*** buffer-size 返回缓冲区中字符个数 
+(buffer-size (current-buffer))
+(buffer-size)
+*** point：位点，在emacs中表示光标当前所在的位置
+(point) 返回光标在当前位点的字符计数
+*** point-min 当前缓冲区的位点最小可能值 一般是1
+*** point-max
+* Chapter 3 如何编写函数定义
+** 3.1 defun 定义函数， 模板如下
+包括5部分，函数名，参数列表，文档，交互性表达式，主体
+(defun function-name (arguments...)
+    "optional-documentation..."
+    (interactive argument-passing-info) ;optional
+    body...)
+
+参数是值传递的，在函数内部修改入参不会改变原有的值
+文档既是C-h f看到的内容，第一行应该是一个完整的句子。
+** 3.2 安装函数定义
+执行函数体即在emacs中安装函数定义
+(defun multiply-by-seven (number)
+    "Multiply NUMBER by seven."
+    (* 7 number))
+(multiply-by-seven 3)
+** 3.3 使函数成为交互函数
+*** (interactive "p")
+*** 激活一个函数的两种方法：
+**** 键入一个包含了传送给函数的数字的前缀参量 + M-x + 函数名
+C-u 3 M-x forward-sentence
+**** 键入函数绑定键或者键序列
+M-number M-e
+C-u number M-e
+输入一个前缀参量传递给后面要执行的函数
+*** 交互的multiply-by-seven函数
+(interactive "p")的含义：要传送一个前缀参量给这个函数
+*** interactive函数的不同选项
+有20多种，慢慢用。。
+** 3.5 永久安装代码
+*** 方法一：将函数定义放在.emacs文件中
+*** 方法二：放在其他文件中，用load函数对定义求值
+*** 方法三：如果是所有用户都要使用的函数，可以放在site-init.el文件中
+** 3.6 let函数
+*** 作用
+用于将一个符号附着到或者绑定到一个值上，let表达式创建的局部变量只在let表达式中保留
+它们的值，局部变量不会影响let表达式之外的东西。未指定初值的变量被初始化为nil。
+*** 模板
+(let varlist body...)
+*** 例子
+(let ((zebra 'stripes)
+      (tiger 'fierce))
+     (message "One kind of animal has %s and another is %s." zebra tiger))
+** 3.7 if
+*** 模板
+(if true-or-false-text
+    action-to-carry-out-if-test-is-true)
+*** 例子
+(if (> 5 4)                           ;if-part
+    (message "5 is greater than 4!")) ;then-part
+** 3.8 if-then-else
+*** 模板
+(if true-or-false-test
+    action-to-carry-out-if-the-test-returns-true
+    action-to-carry-out-if-the-test-returns-false)
+** 3.9 lisp中的真与假
+*** nil即表示空，也表示false
+*** 相反，非空即为true
+*** 注意：当测试返回true而又无法使用那些适当的值时，lisp解释器返回t作为true
+** 3.10 save-excursion函数
+*** 实现source insight中代码浏览历史跳转功能
+思路：每次跳转设置标记，标记位置被保存在标记环中，用C-u C-SPC命令
+可以使光标跳转到被保存的标记处。
+*** 现域(region)的概念：
+位点和标记之间的缓冲区。
+*** 另一个作用：跟踪当前的缓冲区，并恢复它。
+参考append-to-buffer函数
+*** 模板:
+(save-excursion
+    body...)
+*** 在Emacs lisp中，经常和let函数同时出现
+(let varlist
+    (save-excursion
+     body...))
+** 3.11 回顾
+eval-last-sexp、defun、interactive、let、save-excursion、if、if-then-else、equal、eq、message、set、setq、buffer-name、
+buffer-file-name、current-buffer、other-buffer、switch-to-buffer、set-buffer、buffer-size、point、point-min、point-max
+** 3.12 练习
+*** 1
+(defun double (input)
+              (interactive "p")
+              (* 2 input))
+(double 3)
+*** 2
+(defun greater (input)
+    (if (> input fill-column)
+        (message "input number %d is greater than fill-column %d." input fill-column)))
+(greater 60)
+(greater 80)
+* Chapter 4 与缓冲区有关的函数
+** 4.1 查找更多的信息
+*** C-h v、C-h f
+*** M-.、find-tags、M-x visit-tages-table
+** 4.2 简化beginning-of-buffer函数定义
+*** 简化的函数
+(defun simplified-beginning-of-buffer ()
+    "Move point to the beginning of the buffer;
+     leave mark at previous position."
+    (interactive)
+    (push-mark)
+    (goto-char (point-min)))
+
+    (simplified-beginning-of-buffer)
+** 4.3 mark-whole-buffer函数的定义
+作用：将整个缓冲区当做一个region来标记
+快捷键：C-x h
+代码：
+(defun my-mark-whole-buffer ()
+    "Put point at beginning and mark at end of buffer."
+    (interactive)
+    (push-mark (point))
+    (push-mark (point-max))
+    (push-mark (point-min)))
+** 4.4 append-to-buffer函数的定义
+作用：从当前缓冲区中拷贝一个域到一个指定的缓冲区
+*** 函数定义
+(defun append-to-buffer (buffer start end)
+    (interactive "BAppend to buffer: \nr")
+    (let ((oldbuf (current-buffer)))
+        (save-excursion
+            (set-buffer (get-buffer-create buffer))
+            (insert-buffer-substring oldbuf start end))))
+
+** 4.6 练习
+*** 自己的simplified-end-of-buffer
+(defun simplified-end-of-buffer ()
+    "Move point to the end of the buffer;
+    leave mark at previous position"
+    (interactive)
+    (push-mark)
+    (goto-char (point-max)))
+
+(simplified-end-of-buffer)
+
+test
+*** 编写一个判断缓冲区是否存在的函数
+(defun is-buffer-exist ()
+    "Whether the buffer existes."
+    (interactive "BInput the buffer name: \nr")
+    (let ((buffer-name (current-buffer)))
+        (save-excursion
+            (if (get-buffer buffer-name)
+                (message "%s exists." buffer-name)
+                (message "%s doesn't exists." buffer-name)))))
+
+(is-buffer-exist)
+*** 用find-tag找到copy-to-buffer函数的源代码
+** 4.7 遗留问题
+*** interactive的写法
+*** find-tag的用法

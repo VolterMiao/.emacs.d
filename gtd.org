@@ -1,0 +1,5 @@
+* 工作安排
+
+** TODO [#B] Test org-capture
+SCHEDULED: <2016-08-21 Sun 20:00>
+

@@ -1,0 +1,1 @@
+("~/.emacs.d/" "~/Documents/Projects/open_source/Orgar/app/" "~/Documents/Projects/open_source/Orgar/" "~/Documents/Projects/git-0.99/")

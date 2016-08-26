@@ -1,0 +1,69 @@
+* 20160806
+** 12:19 pc键盘的alt和window键互换
+** 12:27 git tag是什么
+** 13:02 从github上下载的是全套代码，怎样获得tag点的代码？
+从选定的tag拉新的本地分支
+git checkout -b branch_name tag_name
+** 13:04 执行make报错 
+./cache.h:20:10: fatal error: 'openssl/sha.h' file not found
+#include SHA1_HEADER
+         ^
+<command line>:1:21: note: expanded from here
+#define SHA1_HEADER <openssl/sha.h>
+                    ^
+1 error generated.
+make: *** [read-cache.o] Error 1
+
+原因：osx不支持openssl
+解决方法：
+> brew install openssl
+> cd /usr/local/include 
+> ln -s ../opt/openssl/include/openssl .
+** Git的工作目录(.git)
+git-init-db.c
+执行git-init-db命令，初始化工作目录，生成.git文件夹
+*** getenv(GIT_DIR_ENVIRONMENT)
+获得.git的文件夹名称，默认是.git
+*** 创建.git工作目录
+*** 创建refs目录
+*** 创建HEAD连接，指向master分支
+*** 创建objects目录
+这是一个用于存储SHI1文件的文件数据库，其实本质上只是一个文件夹，用于存放所提交的文件。文件包含Metadata信息和Blob内容，经由Zlib压缩后算出SHA1，该SHA1的前2位作为子文件夹名，后38位作为文件名。
+
+这里存放的文件包括三种：tree、blob和commit。
+
+Tree：tree文件中存放的是所提交的文件列表，每一行描述所记录的一个文件，包括：文件的权限、路径名、SHA1值。这个就能够用于保存每一次提交的具体内容，通过查询tree文件，可以知道该次提交时所含有的所有文件，然后根据每一个文件的SHA1，可以在object database中搜索出该文件。这样就达到了保存每一次提交的具体内容的目的。
+ 
+BLOB：blob文件是指具体的文件内容，即我们所提交的文件。Blob文件会被压缩，然后计算SHA1值，所以如果文件的内容没有发生变化，那么就不会产生新的Blob文件。因为它们算出的SHA1是相同的，而SHA1值就是它们实际的存放路径。
+ 
+Commit：commit文件是用于记录每一次提交的文件。包含的内容有：tree、parents、author、committer、changelog。其中tree是指用于保存此次提交的tree文件。Parents是指此次提交的父分支是哪些，也是对应的tree文件。Author、committer、changelog是提交的记录信息。
+** git-update-cache --add
+1. 创建两个文件
+> echo "Hello World" > a
+> echo "Silly example" >b
+
+2. add这两个文件
+git-update-cache --add a b
+这两个文件生成了两个objects数据，根据sha1值存入相应的文件夹
+
+3. 查看文件内容
+git-cat-file -t <sha1> 根据sha1文件名查看文件类型，普通文件类型为blob
+git-cat-file "blob" <sha1> 根据sha1文件名查看文件内容
+
+4. 在跟踪文件的同时，git还生成了.git/index文件。这个文件描述了你当前的工作树
+*** update-cache.c
+
+** emacs c c++环境
+*** Jump to definition
+1. Gtags
+  1)安装Global
+   >brew install global
+   在项目目录下执行gtags命令就可以生成GTAGS GPATH等文件
+  2)安装ggtags
+   >(require 'ggtags)
+   >(add hook ...) 见配置文件
+2. ycmd
+*** Autocompletion
+*** On-the-fly syntax check
+*** Find file in project
+projectile插件用于管理和查找项目文件

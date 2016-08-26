@@ -1,0 +1,45 @@
+
+;; ----- smex-history -----
+(
+ eshell
+ package-install
+ pallet-install
+ reveal-in-osx-finder
+ pallet-init
+ pallet-mode
+ mwe:log-keyboard-commands
+)
+
+;; ----- smex-data -----
+(
+ (customize-group . 3)
+ (eshell . 15)
+ (eval-buffer . 24)
+ (counsel-git . 1)
+ (indent-region . 1)
+ (dired . 2)
+ (reveal-in-osx-finder . 10)
+ (package-list-packages-no-fetch . 1)
+ (package-list-packages . 10)
+ (org-mobile-push . 2)
+ (forward-sentence . 1)
+ (double . 1)
+ (shell . 1)
+ (go-mode . 1)
+ (package-install . 19)
+ (org-pomodoro . 2)
+ (insert-chrome-current-tab-url . 6)
+ (make-directory . 1)
+ (helm-ag . 1)
+ (helm-do-ag-project-root . 5)
+ (aya-create . 1)
+ (aya-expand . 1)
+ (list-packages . 1)
+ (package-refresh-contents . 2)
+ (mwe:open-command-log-buffer . 7)
+ (mwe:log-keyboard-commands . 7)
+ (which-key-mode . 2)
+ (pallet-mode . 1)
+ (pallet-init . 1)
+ (pallet-install . 2)
+)
